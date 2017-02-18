@@ -1,0 +1,23 @@
+{
+  "name": "banger-mgmt",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "webpack": "^1.12.14"
+  },
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "jscs": "^2.11.0",
+    "jscs-loader": "^0.2.0",
+    "jshint": "^2.9.1",
+    "jshint-loader": "^0.8.3",
+    "style-loader": "^0.13.1",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "description": ""
+}
