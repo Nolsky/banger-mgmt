@@ -8,6 +8,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "phaser": "^2.6.2",
     "webpack": "^1.12.14"
   },
   "devDependencies": {

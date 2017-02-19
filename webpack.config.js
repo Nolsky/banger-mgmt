@@ -47,10 +47,10 @@ module.exports = {
       loader: 'jscs-loader'
     }] : [],
     loaders: _.flatten([
-      [{
-        test: /pixi.js/,
-        loader: 'script'
-      }],
+      // [{
+      //   test: /pixi.js/,
+      //   loader: 'script'
+      // }],
       debug ? [{
         test:   /\.css$/,
         loader: 'style-loader!css-loader'
