@@ -1,0 +1,156 @@
+{"frames": [
+
+{
+	"filename": "Idle (1).png",
+	"frame": {"x":0,"y":0,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (2).png",
+	"frame": {"x":547,"y":0,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (3).png",
+	"frame": {"x":1094,"y":0,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (4).png",
+	"frame": {"x":0,"y":481,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (5).png",
+	"frame": {"x":547,"y":481,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (6).png",
+	"frame": {"x":1094,"y":481,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (7).png",
+	"frame": {"x":0,"y":962,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (8).png",
+	"frame": {"x":547,"y":962,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (9).png",
+	"frame": {"x":1094,"y":962,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Idle (10).png",
+	"frame": {"x":0,"y":1443,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (1).png",
+	"frame": {"x":547,"y":1443,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (2).png",
+	"frame": {"x":1094,"y":1443,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (3).png",
+	"frame": {"x":0,"y":1924,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (4).png",
+	"frame": {"x":547,"y":1924,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (5).png",
+	"frame": {"x":1094,"y":1924,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (6).png",
+	"frame": {"x":0,"y":2405,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (7).png",
+	"frame": {"x":547,"y":2405,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+},
+{
+	"filename": "Run (8).png",
+	"frame": {"x":1094,"y":2405,"w":547,"h":481},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":547,"h":481},
+	"sourceSize": {"w":547,"h":481}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "dogeAtlas.png",
+	"format": "RGBA8888",
+	"size": {"w":1641,"h":2886},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:acc10e56af0ee5df8927a4b03a1882de:01409e74a7a41e4caedfe1ac58d49fd1:e77f9bb53214f3c2248099b01ee0dfb4$"
+}
+}
