@@ -78,6 +78,6 @@
     "passfail"      : false,    // true: Stop on first error
     "white"         : false,    // true: Check against strict whitespace and indentation rules
     // Custom Globals
-    "globals": {"Text": true}, //not sure why is thinks Text is taken
+    "globals": {"Text": true, "Phaser": true, "PIXI": true, "p2": true}, //not sure why is thinks Text is taken
     "predef"        : ["require", "angular", "ionic", "-Promise"]       // additional predefined global variables
 }
