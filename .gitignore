@@ -2,3 +2,5 @@ node_modules
 .projectile
 *.min.js
 npm-debug.log
+*.hot-update.js
+*.hot-update.json
