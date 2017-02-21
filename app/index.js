@@ -8,7 +8,8 @@ var Phaser = window.Phaser;
 var game = new Phaser.Game(800,800, Phaser.AUTO);
 window.game = game;
 
-var dogeSprite, cursors, wasd, projectiles, fireButton, tileMap, collisionLayer, baddies, bullet, bulletTime = 0;
+var dogeSprite, cursors, wasd, projectiles, fireButton,
+tileMap, collisionLayer, baddies, bullet, bulletTime = 0;
 var projectileCount = 16;
 var enemyCount = 15;
 var playerHealth = 10;
@@ -48,7 +49,7 @@ Enemy.prototype.update = function() {
     this.img.body.velocity.x = Math.floor(Math.random() * 201) - 100;
     this.img.body.velocity.y = Math.floor(Math.random() * 201) - 100;
     this.rotationSpeed = Math.floor(Math.random() * 11) - 5;
-    this.lastSwitch = game.time.now + (Math.random() * 2000);
+    this.lastSwitch = game.time.now + (Math.random() * 5000);
   }
 
   this.img.angle += this.rotationSpeed;
@@ -58,10 +59,13 @@ Enemy.prototype.update = function() {
 var GameState = {
   preload: function() {
     //LOAD RESOURCES
-    game.load.atlas('doge', 'assets/imgs/doge/dogeAtlas.png', 'assets/imgs/doge/dogeAtlas.json');
-    game.load.atlas('bullets', 'assets/imgs/bullets.png', 'assets/imgs/bullets.json');
+    game.load.atlas('doge', 'assets/imgs/doge/dogeAtlas.png',
+      'assets/imgs/doge/dogeAtlas.json');
+    game.load.atlas('bullets', 'assets/imgs/bullets.png',
+      'assets/imgs/bullets.json');
     game.load.image('badSnowFlake', 'assets/imgs/iceTowerBase.png');
-    game.load.tilemap('arena', 'assets/tilesets/arena.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.tilemap('arena', 'assets/tilesets/arena.json',
+      null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/tilesets/scifitiles-sheet.png');
   },
 
@@ -87,7 +91,7 @@ var GameState = {
     game.physics.enable(dogeSprite, Phaser.Physics.ARCADE);
     dogeSprite.anchor.set(0.5, 1);
     dogeSprite.body.collideWorldBounds = true;
-    dogeSprite.body.setSize(350,450,100,10);
+    dogeSprite.body.setSize(350, 450, 100, 10);
     game.camera.follow(dogeSprite);
 
     //Projectiles
@@ -100,10 +104,14 @@ var GameState = {
     projectiles.setAll('anchor.y', 0.5);
     projectiles.setAll('outOfBoundsKill', true);
     projectiles.setAll('checkWorldBounds', true);
-    projectiles.setAll('scale.x', 0.4);
-    projectiles.setAll('scale.y', 0.4);
-    projectiles.callAll('animations.add', 'animations', 'fired', [0,1,2,3], 200, true);
+    projectiles.setAll('scale.x', 1);
+    projectiles.setAll('scale.y', 1);
+    projectiles.callAll('animations.add', 'animations',
+      'fired', [0,1,2,3], 200, true);
     projectiles.callAll('animations.play', 'animations', 'fired');
+    projectiles.setAll('body.setSize.x', 3);
+    projectiles.setAll('body.setSize.y', 3);
+
 
     //input keys
     cursors = game.input.keyboard.createCursorKeys();
@@ -159,23 +167,25 @@ var GameState = {
 
     for (var i = 0; i < baddies.length; i++) {
       if (baddies[i].alive) {
-        game.physics.arcade.collide(dogeSprite, baddies[i].img, enemyHitPlayer, null, this);
+        game.physics.arcade.collide(dogeSprite, baddies[i].img,
+          enemyHitPlayer, null, this);
         game.physics.arcade.collide(collisionLayer, baddies[i].img);
-        game.physics.arcade.overlap(projectiles, baddies[i].img, bulletHitEnemy, null, this);
+        game.physics.arcade.overlap(projectiles, baddies[i].img,
+          bulletHitEnemy, null, this);
         baddies[i].update();
       }
     }
 
     game.physics.arcade.collide(dogeSprite, collisionLayer);
-    game.physics.arcade.collide(projectiles, collisionLayer, bulletHitWall, null, this);
+    game.physics.arcade.collide(projectiles, collisionLayer,
+      bulletHitWall, null, this);
     game.physics.arcade.collide(baddies, collisionLayer);
-
-
   },
 
   render: function() {
     game.debug.text('Your Health: ' + playerHealth, 32, 32);
     game.debug.text('Score: ' + score, 32, 48);
+
   }
 };
 
@@ -183,8 +193,11 @@ function fireBullet() {
   if (game.time.now > bulletTime) {
     bullet = projectiles.getFirstExists(false);
     if (bullet) {
+      game.debug.body(bullet);
       bullet.reset(dogeSprite.x + 45, dogeSprite.y - 50);
-      bullet.rotation = game.physics.arcade.moveToPointer(bullet, 400, game.input.activePointer) + Math.PI/2;
+      bullet.rotation = game.physics.arcade.moveToPointer(
+        bullet, 400, game.input.activePointer
+      ) + Math.PI / 2;
       bulletTime = game.time.now + 75;
     }
   }
