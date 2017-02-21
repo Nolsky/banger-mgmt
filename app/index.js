@@ -8,7 +8,7 @@ var Phaser = require('phaser');
 
 var game = new Phaser.Game(800,800, Phaser.AUTO);
 
-var dogeSprite, cursors, wasd, projectiles, fireButton, mapSet, baddies, bullet, bulletTime = 0;
+var dogeSprite, cursors, wasd, projectiles, fireButton, tileMap, collisionLayer, baddies, bullet, bulletTime = 0;
 var projectileCount = 16;
 var enemyCount = 15;
 var playerHealth = 10;
@@ -69,13 +69,13 @@ var GameState = {
     //INSTANTIATE GAME ENTITIES
 
     //Map
-    mapSet = game.add.tilemap('arena');
-    mapSet.addTilesetImage('scifitiles-sheet', 'tiles');
-    mapSet.createLayer('Base');
+    tileMap = game.add.tilemap('arena');
+    tileMap.addTilesetImage('scifitiles-sheet', 'tiles');
+    tileMap.createLayer('Base');
 
-    var collisionLayer = mapSet.createLayer('Collision');
+    collisionLayer = tileMap.createLayer('Collision');
     collisionLayer.visible = false;
-    mapSet.setCollisionByExclusion([], true, collisionLayer);
+    tileMap.setCollisionByExclusion([], true, collisionLayer);
     collisionLayer.resizeWorld();
 
     //Main Doge
@@ -160,10 +160,16 @@ var GameState = {
     for (var i = 0; i < baddies.length; i++) {
       if (baddies[i].alive) {
         game.physics.arcade.collide(dogeSprite, baddies[i].img, enemyHitPlayer, null, this);
+        game.physics.arcade.collide(collisionLayer, baddies[i].img);
         game.physics.arcade.overlap(projectiles, baddies[i].img, bulletHitEnemy, null, this);
         baddies[i].update();
       }
     }
+
+    game.physics.arcade.collide(dogeSprite, collisionLayer);
+    game.physics.arcade.collide(projectiles, collisionLayer, bulletHitWall, null, this);
+    game.physics.arcade.collide(baddies, collisionLayer);
+
 
   },
 
@@ -198,6 +204,10 @@ function bulletHitEnemy(enemy, bullet) {
   enemy.kill();
   scoreMultiplier += 1;
   score += 10 * scoreMultiplier;
+}
+
+function bulletHitWall(bullet) {
+  bullet.kill();
 }
 
 game.state.add('GameState', GameState);
