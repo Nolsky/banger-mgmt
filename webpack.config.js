@@ -27,39 +27,34 @@ module.exports = {
   devtool: debug ? 'inline-sourcemap' : null,
   entry: debug ? [
     './app/public/stylesheet.css',
-    './app/index.js',
-    'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://localhost:8080'
+    './app/index.js'
   ] : './app/index.js',
   output: {
-    path: './app/public',
+    path: path.join(__dirname, '/app/public'),
     publicPath: '/',
     filename: 'scripts.min.js'
   },
   module: {
-    preLoaders: debug ? [{
-      test:    /\.js$/,
+    rules: _.flatten([
+      debug ? [{
+        test:    /\.js$/,
+        enforce: 'pre',
       exclude: /node_modules/,
-      loader: 'jshint-loader'
+      use: 'jshint-loader'
     }, {
       test:    /\.js$/,
+      enforce: 'pre',
       exclude: /node_modules/,
-      loader: 'jscs-loader'
-    }] : [],
-    loaders: _.flatten([
-      // [{
-      //   test: /pixi.js/,
-      //   loader: 'script'
-      // }],
-      debug ? [{
+      use: 'jscs-loader'
+    }, {
         test:   /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: ['style-loader', 'css-loader']
       }] : []
     ])
   },
   resolve: {
-    extensions: ['', '.js'],
-    modulesDirectories: [
+    extensions: ['.js'],
+    modules: [
       'node_modules',
       'app',
       'app/src',
@@ -80,7 +75,6 @@ module.exports = {
       ))
     }),
     new webpack.optimize.UglifyJsPlugin({mangle: false}),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin()
+    new webpack.optimize.OccurenceOrderPlugin()
   ]
 };
