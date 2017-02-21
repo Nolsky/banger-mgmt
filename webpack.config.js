@@ -24,11 +24,14 @@ module.exports = {
   node: {
     process: true
   },
-  devtool: debug ? 'inline-sourcemap' : null,
-  entry: debug ? [
-    './app/public/stylesheet.css',
-    './app/index.js'
-  ] : './app/index.js',
+  devtool: debug ? 'cheap-source-map' : null,
+  entry: debug ? {
+    app: [
+      './app/public/stylesheet.css',
+      './app/hotbox.js' // hot reloading whole app
+    ]
+    // vendor: ['pixi.js', 'p2', 'phaser']
+  } : './app/index.js',
   output: {
     path: path.join(__dirname, '/app/public'),
     publicPath: '/',
@@ -39,14 +42,14 @@ module.exports = {
       debug ? [{
         test:    /\.js$/,
         enforce: 'pre',
-      exclude: /node_modules/,
-      use: 'jshint-loader'
-    }, {
-      test:    /\.js$/,
-      enforce: 'pre',
-      exclude: /node_modules/,
-      use: 'jscs-loader'
-    }, {
+        exclude: /node_modules/,
+        use: 'jshint-loader'
+      }, {
+        test:    /\.js$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        use: 'jscs-loader'
+      }, {
         test:   /\.css$/,
         use: ['style-loader', 'css-loader']
       }] : []
@@ -67,6 +70,11 @@ module.exports = {
     }
   },
   plugins: debug ? [
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'vendor',
+    //   filename: 'vendor.min.js',
+    //   minChunks: Infinity
+    // }),
     new webpack.HotModuleReplacementPlugin()
   ] : [
     new webpack.DefinePlugin({

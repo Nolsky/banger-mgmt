@@ -3,10 +3,10 @@
 window.PIXI = require('pixi.js');
 window.p2 = require('p2');
 window.Phaser = require('phaser');
-var Phaser = require('phaser');
-
+var Phaser = window.Phaser;
 
 var game = new Phaser.Game(800,800, Phaser.AUTO);
+window.game = game;
 
 var dogeSprite, cursors, wasd, projectiles, fireButton, mapSet, baddies, bullet, bulletTime = 0;
 var projectileCount = 16;
@@ -33,7 +33,7 @@ var Enemy = function(index, game, player) {
   this.img.body.immovable = false;
   this.img.body.collideWorldBounds = true;
   this.img.angle = game.rnd.angle();
-}
+};
 
 Enemy.prototype.damage = function() {
   this.health -= 1;
@@ -41,7 +41,7 @@ Enemy.prototype.damage = function() {
     this.alive = false;
     this.img.kill();
   }
-}
+};
 
 Enemy.prototype.update = function() {
   if (game.time.now > this.lastSwitch) {
@@ -53,7 +53,7 @@ Enemy.prototype.update = function() {
 
   this.img.angle += this.rotationSpeed;
 
-}
+};
 
 var GameState = {
   preload: function() {
@@ -146,10 +146,10 @@ var GameState = {
     }
 
     if (!(wasd.right.isDown || wasd.left.isDown ||
-      wasd.down.isDown || wasd.up.isDown ||
-      cursors.right.isDown || cursors.left.isDown ||
-      cursors.down.isDown || cursors.up.isDown)
-      ) {
+          wasd.down.isDown || wasd.up.isDown ||
+          cursors.right.isDown || cursors.left.isDown ||
+          cursors.down.isDown || cursors.up.isDown)
+       ) {
       dogeSprite.play('idleDoge');
     }
 
