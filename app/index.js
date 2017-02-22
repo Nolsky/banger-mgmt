@@ -48,7 +48,7 @@ Enemy.prototype.damage = function() {
 };
 
 Enemy.prototype.update = function() {
-  if (game.time.now > this.nextSwitch && this.alive) {
+  if ((game.time.now > this.nextSwitch) && this.alive) {
     this.img.body.velocity.x = Math.floor(Math.random() * 201) - 100;
     this.img.body.velocity.y = Math.floor(Math.random() * 201) - 100;
     this.rotationSpeed = Math.floor(Math.random() * 11) - 5;
@@ -185,10 +185,10 @@ var GameState = {
     for (var i = 0; i < baddies.length; i++) {
       if (baddies[i].alive) {
         game.physics.arcade.collide(dogeSprite, baddies[i].img,
-          enemyHitPlayer, null, this);
+          enemyHitPlayer(baddies[i]), null, this);
         game.physics.arcade.collide(collisionLayer, baddies[i].img);
         game.physics.arcade.overlap(projectiles, baddies[i].img,
-          bulletHitEnemy, null, this);
+          bulletHitEnemy(baddies[i]), null, this);
         baddies[i].update();
       }
     }
@@ -231,22 +231,25 @@ function enemyBullet(enemyX, enemyY) {
   }
 }
 
-function enemyHitPlayer(player, enemy) {
-  playerHealth -= 1;
-  if (playerHealth <= 0) {
-    player.kill();
+function enemyHitPlayer(enemy) {
+  return function(player, enemySprite) {
+    playerHealth -= 1;
+    if (playerHealth <= 0) {
+      player.kill();
+    }
+    scoreMultiplier = 0;
+    enemy.alive = false;
+    enemySprite.kill();
   }
-  scoreMultiplier = 0;
-  enemy.kill();
 }
 
-function bulletHitEnemy(enemy, bullet) {
-  bullet.kill();
-  enemy.damage();
-  // enemy.kill();
-  // enemy.damage();
-  scoreMultiplier += 1;
-  score += 10 * scoreMultiplier;
+function bulletHitEnemy(enemy) {
+  return function(enemySprite, bullet) {
+    bullet.kill();
+    enemy.damage();
+    scoreMultiplier += 1;
+    score += 10 * scoreMultiplier;
+  };
 }
 
 function bulletHitWall(bullet) {
