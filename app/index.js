@@ -9,7 +9,7 @@ var game = new Phaser.Game(800,800, Phaser.AUTO);
 window.game = game;
 
 var dogeSprite, cursors, wasd, projectiles, fireButton,
-tileMap, collisionLayer, baddies, bullet, bulletTime = 0;
+tileMap, collisionLayer, baddies, bullet, enemyProjectiles, bulletTime = 0;
 var projectileCount = 16;
 var enemyCount = 15;
 var playerHealth = 10;
@@ -20,9 +20,9 @@ var scoreMultiplier = 0;
 var Enemy = function(index, game, player) {
   this.game = game;
   this.health = 1;
-  this.palyer = player;
+  this.player = player;
   this.alive = true;
-  this.lastSwitch = 0;
+  this.nextSwitch = 0;
   this.rotationSpeed = Math.floor(Math.random() * 21) - 10;
   var x = game.world.randomX;
   var y = game.world.randomY;
@@ -41,17 +41,22 @@ Enemy.prototype.damage = function() {
   if (this.health <= 0) {
     this.alive = false;
     this.img.kill();
+    return true;
   }
+
+  return false;
 };
 
 Enemy.prototype.update = function() {
-  if (game.time.now > this.lastSwitch) {
+  if ((game.time.now > this.nextSwitch) && this.alive) {
     this.img.body.velocity.x = Math.floor(Math.random() * 201) - 100;
     this.img.body.velocity.y = Math.floor(Math.random() * 201) - 100;
     this.rotationSpeed = Math.floor(Math.random() * 11) - 5;
-    this.lastSwitch = game.time.now + (Math.random() * 5000);
+    this.nextSwitch = game.time.now + (Math.random() * 10000);
+    if (Math.random() > 0.75 && this.alive) {
+      enemyBullet(this.img.body.x, this.img.body.y);
+    }
   }
-
   this.img.angle += this.rotationSpeed;
 
 };
@@ -112,6 +117,18 @@ var GameState = {
     projectiles.setAll('body.setSize.x', 3);
     projectiles.setAll('body.setSize.y', 3);
 
+    enemyProjectiles = game.add.group();
+    enemyProjectiles.enableBody = true;
+    enemyProjectiles.physicsBodyType = Phaser.Physics.ARCADE;
+    enemyProjectiles.createMultiple(enemyCount * 2, 'bullets', [3]);
+    enemyProjectiles.setAll('anchor.x', 0.5);
+    enemyProjectiles.setAll('anchor.y', 0.5);
+    enemyProjectiles.setAll('outOfBoundsKill', true);
+    enemyProjectiles.setAll('checkWorldBounds', true);
+    enemyProjectiles.setAll('scale.x', 1);
+    enemyProjectiles.setAll('scale.y', 1);
+    enemyProjectiles.setAll('body.setSize.x', 3);
+    enemyProjectiles.setAll('body.setSize.y', 3);
 
     //input keys
     cursors = game.input.keyboard.createCursorKeys();
@@ -168,10 +185,10 @@ var GameState = {
     for (var i = 0; i < baddies.length; i++) {
       if (baddies[i].alive) {
         game.physics.arcade.collide(dogeSprite, baddies[i].img,
-          enemyHitPlayer, null, this);
+          enemyHitPlayer(baddies[i]), null, this);
         game.physics.arcade.collide(collisionLayer, baddies[i].img);
         game.physics.arcade.overlap(projectiles, baddies[i].img,
-          bulletHitEnemy, null, this);
+          bulletHitEnemy(baddies[i]), null, this);
         baddies[i].update();
       }
     }
@@ -203,20 +220,36 @@ function fireBullet() {
   }
 }
 
-function enemyHitPlayer(player, enemy) {
-  playerHealth -= 1;
-  if (playerHealth <= 0) {
-    player.kill();
+function enemyBullet(enemyX, enemyY) {
+
+  bullet = enemyProjectiles.getFirstExists(false);
+  if (bullet) {
+    bullet.reset(enemyX, enemyY);
+    bullet.rotation = game.physics.arcade.moveToObject(
+      bullet, dogeSprite, 300
+    ) + Math.PI / 2;
   }
-  scoreMultiplier = 0;
-  enemy.kill();
 }
 
-function bulletHitEnemy(enemy, bullet) {
-  bullet.kill();
-  enemy.kill();
-  scoreMultiplier += 1;
-  score += 10 * scoreMultiplier;
+function enemyHitPlayer(enemy) {
+  return function(player, enemySprite) {
+    playerHealth -= 1;
+    if (playerHealth <= 0) {
+      player.kill();
+    }
+    scoreMultiplier = 0;
+    enemy.alive = false;
+    enemySprite.kill();
+  }
+}
+
+function bulletHitEnemy(enemy) {
+  return function(enemySprite, bullet) {
+    bullet.kill();
+    enemy.damage();
+    scoreMultiplier += 1;
+    score += 10 * scoreMultiplier;
+  };
 }
 
 function bulletHitWall(bullet) {
