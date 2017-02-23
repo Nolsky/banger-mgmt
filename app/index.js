@@ -9,7 +9,8 @@ var game = new Phaser.Game(800,800, Phaser.AUTO);
 window.game = game;
 
 var dogeSprite, cursors, wasd, projectiles, fireButton,
-tileMap, collisionLayer, baddies, bullet, enemyProjectiles, bulletTime = 0;
+tileMap, collisionLayer, baddies, bullet, enemyProjectiles,
+animRef = null, bulletTime = 0;
 var projectileCount = 16;
 var enemyCount = 15;
 var playerHealth = 10;
@@ -90,9 +91,13 @@ var GameState = {
     //Main Doge
     dogeSprite = game.add.sprite(100, 100, 'doge');
     dogeSprite.scale.set(0.2);
-    dogeSprite.animations.add('idleDoge', [0,1,2,3,4,5,6,7,8,9], 5, true);
+    dogeSprite.animations.add('idleDoge',
+      [10,11,12,13,14,15,16,17,18,19], 5, true);
     dogeSprite.play('idleDoge');
-    dogeSprite.animations.add('runDoge', [10,11,12,13,14,15,16,17], 8, true);
+    dogeSprite.animations.add('runDoge',
+      [20,21,22,23,24,25,26,27], 8, true);
+    dogeSprite.animations.add('hurtDoge',
+      [0,1,2,3,4,5,6,7,8,9], 20, false);
     game.physics.enable(dogeSprite, Phaser.Physics.ARCADE);
     dogeSprite.anchor.set(0.5, 1);
     dogeSprite.body.collideWorldBounds = true;
@@ -155,27 +160,26 @@ var GameState = {
     if (wasd.right.isDown || cursors.right.isDown) {
       dogeSprite.body.velocity.x = 400;
       dogeSprite.scale.x = 0.2;
-      dogeSprite.play('runDoge');
     } else if (wasd.left.isDown || cursors.left.isDown) {
       dogeSprite.body.velocity.x = (-400);
       dogeSprite.scale.x = -0.2;
-      dogeSprite.play('runDoge');
     }
 
     if (wasd.down.isDown || cursors.down.isDown) {
       dogeSprite.body.velocity.y = 400;
-      dogeSprite.play('runDoge');
     } else if (wasd.up.isDown || cursors.up.isDown) {
       dogeSprite.body.velocity.y = (-400);
-      dogeSprite.play('runDoge');
     }
 
     if (!(wasd.right.isDown || wasd.left.isDown ||
           wasd.down.isDown || wasd.up.isDown ||
           cursors.right.isDown || cursors.left.isDown ||
           cursors.down.isDown || cursors.up.isDown)
+        && !(animRef ? animRef.isPlaying : false)
        ) {
       dogeSprite.play('idleDoge');
+    } else if (!(animRef ? animRef.isPlaying : false)) {
+      dogeSprite.play('runDoge');
     }
 
     if (fireButton.isDown) {
@@ -184,8 +188,10 @@ var GameState = {
 
     for (var i = 0; i < baddies.length; i++) {
       if (baddies[i].alive) {
-        game.physics.arcade.collide(dogeSprite, baddies[i].img,
-          enemyHitPlayer(baddies[i]), null, this);
+        if (!(animRef ? animRef.isPlaying : false)) {
+          game.physics.arcade.collide(dogeSprite, baddies[i].img,
+            enemyHitPlayer(baddies[i]), null, this);
+        }
         game.physics.arcade.collide(collisionLayer, baddies[i].img);
         game.physics.arcade.overlap(projectiles, baddies[i].img,
           bulletHitEnemy(baddies[i]), null, this);
@@ -196,7 +202,13 @@ var GameState = {
     game.physics.arcade.collide(dogeSprite, collisionLayer);
     game.physics.arcade.collide(projectiles, collisionLayer,
       bulletHitWall, null, this);
+    game.physics.arcade.collide(enemyProjectiles, collisionLayer,
+      bulletHitWall, null, this);
     game.physics.arcade.collide(baddies, collisionLayer);
+    if (!(animRef ? animRef.isPlaying : false)) {
+      game.physics.arcade.collide(dogeSprite, enemyProjectiles,
+        bulletHitPlayer, null, this);
+    }
   },
 
   render: function() {
@@ -210,8 +222,7 @@ function fireBullet() {
   if (game.time.now > bulletTime) {
     bullet = projectiles.getFirstExists(false);
     if (bullet) {
-      game.debug.body(bullet);
-      bullet.reset(dogeSprite.x + 45, dogeSprite.y - 50);
+      bullet.reset(dogeSprite.x, dogeSprite.y - 45);
       bullet.rotation = game.physics.arcade.moveToPointer(
         bullet, 400, game.input.activePointer
       ) + Math.PI / 2;
@@ -221,7 +232,6 @@ function fireBullet() {
 }
 
 function enemyBullet(enemyX, enemyY) {
-
   bullet = enemyProjectiles.getFirstExists(false);
   if (bullet) {
     bullet.reset(enemyX, enemyY);
@@ -232,15 +242,11 @@ function enemyBullet(enemyX, enemyY) {
 }
 
 function enemyHitPlayer(enemy) {
-  return function(player, enemySprite) {
-    playerHealth -= 1;
-    if (playerHealth <= 0) {
-      player.kill();
-    }
-    scoreMultiplier = 0;
+  return function(enemySprite) {
+    dogeGotHurt();
     enemy.alive = false;
     enemySprite.kill();
-  }
+  };
 }
 
 function bulletHitEnemy(enemy) {
@@ -254,6 +260,20 @@ function bulletHitEnemy(enemy) {
 
 function bulletHitWall(bullet) {
   bullet.kill();
+}
+
+function bulletHitPlayer(bullet) {
+  bullet.kill();
+  dogeGotHurt();
+}
+
+function dogeGotHurt() {
+  animRef = dogeSprite.play('hurtDoge');
+  playerHealth -= 1;
+  scoreMultiplier = 0;
+  if (playerHealth <= 0) {
+    dogeSprite.kill();
+  }
 }
 
 game.state.add('GameState', GameState);
