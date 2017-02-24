@@ -242,7 +242,7 @@ function enemyBullet(enemyX, enemyY) {
 }
 
 function enemyHitPlayer(enemy) {
-  return function(enemySprite) {
+  return function(player, enemySprite) {
     dogeGotHurt();
     enemy.alive = false;
     enemySprite.kill();
@@ -262,7 +262,7 @@ function bulletHitWall(bullet) {
   bullet.kill();
 }
 
-function bulletHitPlayer(bullet) {
+function bulletHitPlayer(player, bullet) {
   bullet.kill();
   dogeGotHurt();
 }
