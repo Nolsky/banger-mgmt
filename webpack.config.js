@@ -60,7 +60,7 @@ module.exports = {
     modules: [
       'node_modules',
       'app',
-      'app/src',
+      'app/game',
       'lib'
     ],
     alias: {
