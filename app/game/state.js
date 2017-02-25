@@ -1,13 +1,14 @@
 'use strict';
 
 var Phaser = require('phaser'),
+    _ = require('lodash'),
     Player = require('game/player'),
+    Me = require('game/me'),
+    Computer = require('game/computer'),
     ProjectileStore = require('game/projectile_store');
 
 var state = {};
 window.bm_state = state;
-
-var PLAYER_SPEED = 300;
 
 module.exports = {
   preload: function() {
@@ -36,19 +37,13 @@ module.exports = {
     state.collisionLayer.resizeWorld();
 
     // Entities
-    state.me = new Player(this);
-    window.me = state.me;
-    this.camera.follow(state.me.sprite);
+    state.me = new Me(this);
     ProjectileStore.init(this, 100);
 
-    // Controls
-    state.fireButton = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    state.wasd = {
-      up: this.input.keyboard.addKey(Phaser.Keyboard.W),
-      down: this.input.keyboard.addKey(Phaser.Keyboard.S),
-      left: this.input.keyboard.addKey(Phaser.Keyboard.A),
-      right: this.input.keyboard.addKey(Phaser.Keyboard.D)
-    };
+    state.enemies = [];
+    for (var i = 0; i < 10; i++) {
+      state.enemies.push(new Computer(this, 'computer-' + i));
+    }
 
     // Fits game in page
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -59,42 +54,35 @@ module.exports = {
   },
 
   update: function() {
+    var game = this;
     // Me
-    var mysprite = state.me.sprite;
-    mysprite.body.velocity.set(0);
+    state.me.update();
+    this.physics.arcade.collide(state.me.player.sprite, state.collisionLayer);
+    this.physics.arcade.collide(
+      ProjectileStore.get(), state.me.player.sprite, function(hit, bullet) {
+        bullet.kill();
+        state.me.player.damage();
+      }, null, game
+    );
 
-    var wasd = state.wasd;
-    if (wasd.right.isDown) {
-      if (!wasd.left.isDown) {
-        mysprite.body.velocity.x = PLAYER_SPEED;
-        mysprite.scale.x = 0.2;
-      }
-    } else if (wasd.left.isDown) {
-      mysprite.body.velocity.x = -PLAYER_SPEED;
-      mysprite.scale.x = -0.2;
-    }
-
-    if (wasd.down.isDown) {
-      if (!wasd.up.isDown) {
-        mysprite.body.velocity.y = PLAYER_SPEED;
-      }
-    } else if (wasd.up.isDown) {
-      mysprite.body.velocity.y = -PLAYER_SPEED;
-    }
-
-    state.me.updateAnimation();
-
-
-    if (state.fireButton.isDown) {
-      ProjectileStore.fire(mysprite.x, mysprite.y, 'pointer');
-    }
+    // Others
+    _.each(state.enemies, function(enemy) {
+      if (!enemy.player.alive) return;
+      enemy.update(state);
+      game.physics.arcade.collide(enemy.player.sprite, state.collisionLayer);
+      game.physics.arcade.collide(
+        ProjectileStore.get(), enemy.player.sprite, function(hit, bullet) {
+          bullet.kill();
+          enemy.player.damage();
+        }, null, game
+      );
+    });
 
     // Collision Checking
-    this.physics.arcade.collide(mysprite, state.collisionLayer);
     this.physics.arcade.collide(
       ProjectileStore.get(), state.collisionLayer, function(bullet) {
         bullet.kill();
-      }, null, this
+      }, null, game
     );
     
   },

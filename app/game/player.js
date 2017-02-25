@@ -1,11 +1,14 @@
 'use strict';
 
 var Phaser = require('Phaser');
+var ProjectileStore = require('game/projectile_store');
 
 function Player(game) {
   this.game = game;
   this.health = 5;
   this.alive = true;
+  this.SPEED = 300;
+  this.FIRERATE = 300;
   
   var x = game.world.randomX;
   var y = game.world.randomY;
@@ -40,13 +43,20 @@ Player.prototype.die = function damage() {
   this.sprite.kill();
 }
 
-Player.prototype.update = function update() {
-  
+Player.prototype.shoot = function shoot(target) {
+  if (!this.alive) return;
+  if (Date.now() - this.lastShot < this.FIRERATE) return;
+  this.lastShot = Date.now();
+  ProjectileStore.fire(this.sprite.x, this.sprite.y, target);
 };
 
 Player.prototype.updateAnimation = function updateAnimation() {
-  var isMoving = Math.abs(this.sprite.body.velocity.x)
-      + Math.abs(this.sprite.body.velocity.y) > 1;
+  var vx = this.sprite.body.velocity.x;
+  var vy = this.sprite.body.velocity.y;
+
+  this.sprite.scale.x = 0.2 * (vx < 0 ? -1 : 1);
+  
+  var isMoving = Math.abs(vx) + Math.abs(vy) > 1;
   if (isMoving) {
     if (this.currentAnimation === 'idleDoge') {
       this.sprite.play('runDoge');
