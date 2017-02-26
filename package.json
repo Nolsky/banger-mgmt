@@ -9,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "phaser": "^2.6.2",
+    "pubnub": "^4.4.4",
     "webpack": "^2.2.1"
   },
   "devDependencies": {

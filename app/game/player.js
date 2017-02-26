@@ -3,16 +3,17 @@
 var Phaser = require('Phaser');
 var ProjectileStore = require('game/projectile_store');
 
-function Player(game) {
+function Player(game, team) {
   this.game = game;
+  this.team = team;
   this.health = 5;
   this.alive = true;
   this.SPEED = 300;
   this.FIRERATE = 300;
-  
+
   var x = game.world.randomX;
   var y = game.world.randomY;
-  
+
   this.sprite = game.add.sprite(x, y, 'doge');
   game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
   this.sprite.scale.set(0.2);
@@ -36,18 +37,25 @@ Player.prototype.damage = function damage() {
     return true;
   }
   return false;
-}
+};
 
 Player.prototype.die = function damage() {
   this.alive = false;
   this.sprite.kill();
-}
+};
 
 Player.prototype.shoot = function shoot(target) {
   if (!this.alive) return;
   if (Date.now() - this.lastShot < this.FIRERATE) return;
+  if (this.game.multi) {
+    this.game.multi.emit('I_SHOT', {
+      team: this.team,
+      x: this.sprite.x,
+      y: this.sprite.y
+    });
+  }
   this.lastShot = Date.now();
-  ProjectileStore.fire(this.sprite.x, this.sprite.y, target);
+  ProjectileStore.fire(this.sprite.x, this.sprite.y, target, this.team);
 };
 
 Player.prototype.updateAnimation = function updateAnimation() {
@@ -55,7 +63,7 @@ Player.prototype.updateAnimation = function updateAnimation() {
   var vy = this.sprite.body.velocity.y;
 
   this.sprite.scale.x = 0.2 * (vx < 0 ? -1 : 1);
-  
+
   var isMoving = Math.abs(vx) + Math.abs(vy) > 1;
   if (isMoving) {
     if (this.currentAnimation === 'idleDoge') {
