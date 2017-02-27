@@ -6,11 +6,11 @@ function ProjectileStore() {
   var projectiles = null;
 
   var SPEED = 400;
-  
+
   this.init = function init(game, num) {
     this.game = game;
     this.num = num;
-    
+
     projectiles = game.add.group();
     projectiles.enableBody = true;
     projectiles.physicsBodyType = Phaser.Physics.ARCADE;
@@ -33,10 +33,11 @@ function ProjectileStore() {
     return projectiles;
   };
 
-  this.fire = function fire(x, y, target) {
+  this.fire = function fire(x, y, target, team) {
     var bullet = projectiles.getFirstExists(false);
     if (bullet) {
       bullet.reset(x, y);
+      bullet.team = team;
       if (target === 'pointer') {
         bullet.rotation = this.game.physics.arcade.moveToPointer(
           bullet, SPEED, this.game.input.activePointer
@@ -47,7 +48,7 @@ function ProjectileStore() {
         ) + Math.PI / 2;
       }
     }
-  }
-};
+  };
+}
 
 module.exports = new ProjectileStore();

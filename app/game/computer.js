@@ -4,7 +4,7 @@ var Player = require('./player');
 
 function Computer(game, id) {
   this.id = id;
-  var player = new Player(game);
+  var player = new Player(game, 'comps');
   this.player = player;
   this.game = game;
   this.lastMove = 0;
@@ -33,8 +33,8 @@ Computer.prototype.update = function update(gameState) {
   if (Date.now() - this.lastShot > 4000) {
     this.player.shoot(gameState.me.player.sprite);
     this.lastShot = Date.now();
-  }  
-  
-}
+  }
+
+};
 
 module.exports = Computer;
