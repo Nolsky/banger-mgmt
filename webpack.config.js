@@ -24,7 +24,7 @@ module.exports = {
   node: {
     process: true
   },
-  devtool: debug ? 'cheap-source-map' : null,
+  devtool: debug ? 'cheap-source-map' : false,
   entry: debug ? {
     app: [
       './app/public/stylesheet.css',
@@ -79,10 +79,9 @@ module.exports = {
   ] : [
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(_.pick(
-        $, 'NODE_ENV'
+        $, 'NODE_ENV', 'PORT'
       ))
     }),
-    new webpack.optimize.UglifyJsPlugin({mangle: false}),
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.optimize.UglifyJsPlugin({mangle: false})
   ]
 };

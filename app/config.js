@@ -3,5 +3,5 @@
 var $ = process.env;
 
 module.exports = {
-  socketUrl: 'http://localhost:3000'
+  socketUrl: $.PORT || 'http://localhost:3000'
 };
