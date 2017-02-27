@@ -47,11 +47,13 @@ Player.prototype.die = function damage() {
 Player.prototype.shoot = function shoot(target) {
   if (!this.alive) return;
   if (Date.now() - this.lastShot < this.FIRERATE) return;
-  if (this.game.multi) {
-    this.game.multi.emit('I_SHOT', {
+  if (this.game.multi && target === 'pointer') {
+    this.game.multi.emit('SHOOT', {
       team: this.team,
       x: this.sprite.x,
-      y: this.sprite.y
+      y: this.sprite.y,
+      tox: this.game.input.activePointer.position.x,
+      toy: this.game.input.activePointer.position.y
     });
   }
   this.lastShot = Date.now();

@@ -64,6 +64,7 @@ module.exports = {
     var multi = require('game/multiplayer');
     var q = getQuery();
     if (q.room) {
+      state.me.player.team = multi.myId();
       multi.join(q.room);
       multi.sync(this, state);
       this.multi = multi;
@@ -75,11 +76,14 @@ module.exports = {
 
 
 
-    // Fits game in page
+    // Fit game in page
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.pageAlignVertically = true;
     // this.scale.setScreenSize( true );
+
+    // Stop pausing
+    this.stage.disableVisibilityChange = true;
   },
 
   update: function() {

@@ -42,6 +42,10 @@ function ProjectileStore() {
         bullet.rotation = this.game.physics.arcade.moveToPointer(
           bullet, SPEED, this.game.input.activePointer
         ) + Math.PI / 2;
+      } else if (target.x && target.y) {
+        bullet.rotation = this.game.physics.arcade.moveToXY(
+          bullet, target.x, target.y, SPEED
+        ) + Math.PI / 2;
       } else {
         bullet.rotation = this.game.physics.arcade.moveToObject(
           bullet, target, SPEED

@@ -1,6 +1,7 @@
 'use strict';
 
 var socket = require('lib/socket-client'),
+    ProjectileStore = require('game/projectile_store'),
     _ = require('lodash');
 
 var currentLobby = null;
@@ -8,6 +9,10 @@ exports.join = function join(lobbyId) {
   if (currentLobby) socket.leaveAll();
   socket.join(lobbyId);
   currentLobby = lobbyId;
+};
+
+exports.myId = function myId() {
+  return socket.uuid;
 };
 
 exports.update = function update(data) {
@@ -25,8 +30,18 @@ var others = {};
 
 exports.sync = function sync(game, state) {
   socket.clearListeners();
+
+  var eventHandlers = {
+    'SHOOT': function(data) {
+      ProjectileStore.fire(data.x, data.y, {
+        x: data.tox, y: data.toy}, data.team);
+    }
+  };
+
+
   socket.on('UPDATE', function(data) {
 
+    // Update player states
     _.each(data.playerStates, function(ps, player) {
       if (player === socket.uuid) return;
       var actor = others[player];
@@ -40,6 +55,7 @@ exports.sync = function sync(game, state) {
       actor.setPlayerState(ps);
     });
 
+    // Remove disconnected players
     _.each(others, function(other, id) {
       if (!data.playerStates[id]) {
         other.player.sprite.kill();
@@ -48,6 +64,12 @@ exports.sync = function sync(game, state) {
         state.others.splice(i, 1);
         delete others[id];
       }
+    });
+
+    // Process events
+    _.each(data.events, function(event) {
+      if (event.actorId === socket.uuid) return;
+      eventHandlers[event.type](event.data);
     });
 
 
