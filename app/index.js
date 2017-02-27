@@ -9,5 +9,8 @@ var gameState = require('game/state');
 
 var game = Game();
 game.state.add('GameState', gameState);
-game.state.start('GameState');
+game.state.add('Boot', require('game/boot'));
+game.state.add('Preloader', require('game/preloader'));
+game.state.add('MainMenu', require('game/mainMenu'))
+game.state.start('Boot');
 

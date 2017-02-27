@@ -23,27 +23,6 @@ function getQuery() {
 module.exports = {
   preload: function() {
     this.time.advancedTiming = true; // to track fps
-
-    this.load.atlas(
-      'doge',
-      'assets/imgs/doge/dogeAtlas.png',
-      'assets/imgs/doge/dogeAtlas.json'
-    );
-    this.load.atlas(
-      'bullets',
-      'assets/imgs/bullets.png',
-      'assets/imgs/bullets.json'
-    );
-
-    this.load.tilemap(
-      'arena',
-      'assets/tilesets/arena.json',
-      null,
-      Phaser.Tilemap.TILED_JSON
-    );
-
-    this.load.image('badSnowFlake', 'assets/imgs/iceTowerBase.png');
-    this.load.image('tiles', 'assets/tilesets/scifitiles-sheet.png');
   },
 
   create: function() {
@@ -76,9 +55,9 @@ module.exports = {
 
 
     // Fits game in page
-    this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    this.scale.pageAlignHorizontally = true;
-    this.scale.pageAlignVertically = true;
+    // this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    // this.scale.pageAlignHorizontally = true;
+    // this.scale.pageAlignVertically = true;
     // this.scale.setScreenSize( true );
   },
 
