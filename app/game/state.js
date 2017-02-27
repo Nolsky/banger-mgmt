@@ -66,10 +66,6 @@ module.exports = {
     if (q.room) {
       multi.join(q.room);
       multi.sync(this, state);
-      multi.emit('JOIN', {
-        x: state.me.player.sprite.x,
-        y: state.me.player.sprite.y
-      });
       this.multi = multi;
     } else {
       for (var i = 0; i < 3; i++) {

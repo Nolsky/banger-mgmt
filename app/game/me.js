@@ -44,7 +44,7 @@ Me.prototype.update = function update() {
   }
 
   if (this.game.multi) {
-    this.game.multi.emit('STATE', {
+    this.game.multi.update({
       x: mysprite.x,
       y: mysprite.y,
       vx: mysprite.body.velocity.x,

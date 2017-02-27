@@ -11,7 +11,15 @@ function Other(game, id, x, y) {
   player.sprite.y = y;
 }
 
-Other.prototype.update = function update(gameState) {
+Other.prototype.setPlayerState = function setPlayerState(ps) {
+  var sprite = this.player.sprite;
+  sprite.x = ps.x;
+  sprite.y = ps.y;
+  sprite.body.velocity.x = ps.vx;
+  sprite.body.velocity.y = ps.vy;
+};
+
+Other.prototype.update = function update() {
   this.player.updateAnimation();
 };
 

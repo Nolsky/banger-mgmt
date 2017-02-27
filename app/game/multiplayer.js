@@ -1,55 +1,56 @@
 'use strict';
 
-var pubnub = require('lib/pubnub-client'),
+var socket = require('lib/socket-client'),
     _ = require('lodash');
-
-var me = pubnub.getUUID();
 
 var currentLobby = null;
 exports.join = function join(lobbyId) {
-  console.log('p', pubnub);
-  if (currentLobby) pubnub.unsubcribeAll();
-  pubnub.subscribe(lobbyId);
+  if (currentLobby) socket.leaveAll();
+  socket.join(lobbyId);
   currentLobby = lobbyId;
 };
 
-exports.emit = function emit(actionType, data) {
-  pubnub.publish(currentLobby, {type: actionType, data: data});
+exports.update = function update(data) {
+  socket.emit('update', data);
 };
 
+exports.emit = function emit(type, data) {
+  socket.emit('event', {
+    type: type,
+    data: data
+  });
+};
 var Other = require('game/other');
+var others = {};
 
 exports.sync = function sync(game, state) {
-  pubnub.clearListeners();
-  pubnub.onMessage(function(payload) {
-    if (payload.publisher === me) return;
-    var data = payload.message.data;
-    switch (payload.message.type) {
-    case 'JOIN':
-      var actor = _.find(state.others, {id: payload.publisher});
-      if (!actor) {
-        state.others.push(new Other(game, payload.publisher, data.x, data.y));
-      }
-      break;
+  socket.clearListeners();
+  socket.on('UPDATE', function(data) {
 
-    case 'STATE':
-      var actor = _.find(state.others, {id: payload.publisher});
+    _.each(data.playerStates, function(ps, player) {
+      if (player === socket.uuid) return;
+      var actor = others[player];
+
       if (!actor) {
-        actor = new Other(game, payload.publisher, data.x, data.y);
+        actor = new Other(game, player, ps.x, ps.y);
         state.others.push(actor);
-        return;
+        others[player] = actor;
       }
-      actor.player.sprite.x = data.x;
-      actor.player.sprite.y = data.y;
-      actor.player.sprite.body.velocity.x = data.vx;
-      actor.player.sprite.body.velocity.y = data.vy;
-      break;
 
-    case 'I_SHOT':
-      break;
+      actor.setPlayerState(ps);
+    });
 
-    case 'I_GOT_HIT':
-      break;
-    }
+    _.each(others, function(other, id) {
+      if (!data.playerStates[id]) {
+        other.player.sprite.kill();
+        var i = state.others.indexOf(other);
+        if (i === -1) return;
+        state.others.splice(i, 1);
+        delete others[id];
+      }
+    });
+
+
+
   });
 };
