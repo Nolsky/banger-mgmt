@@ -6,7 +6,7 @@ var _ = require('lodash'),
     io = require('socket.io-client'); // socket.io lib
 
 var host = window.location.origin;
-if (_.contains(host, 'localhost')) host = config.socketUrl;
+if (host.indexOf('localhost') !== -1) host = config.socketUrl;
 var socket = io(host); // this socket client
 exports.uuid = socket.id;
 
