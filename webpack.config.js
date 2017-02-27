@@ -64,8 +64,10 @@ module.exports = {
       'lib'
     ],
     alias: {
+      'Phaser': phaser,
       'phaser': phaser,
       'pixi.js': pixi,
+      'PIXI.js': pixi,
       'p2': p2
     }
   },
