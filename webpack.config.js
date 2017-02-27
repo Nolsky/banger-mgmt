@@ -81,7 +81,7 @@ module.exports = {
   ] : [
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(_.pick(
-        $, 'NODE_ENV', 'PORT'
+        $, 'NODE_ENV'
       ))
     }),
     new webpack.optimize.UglifyJsPlugin({mangle: false})

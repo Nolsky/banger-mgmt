@@ -5,7 +5,9 @@ var _ = require('lodash'),
     Promise = require('bluebird'),
     io = require('socket.io-client'); // socket.io lib
 
-var socket = io(config.socketUrl); // this socket client
+var host = window.location.origin;
+if (_.contains(host, 'localhost')) host = config.socketUrl;
+var socket = io(host); // this socket client
 exports.uuid = socket.id;
 
 
