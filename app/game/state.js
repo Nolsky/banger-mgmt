@@ -64,10 +64,10 @@ module.exports = {
     var multi = require('game/multiplayer');
     var q = getQuery();
     if (q.room) {
-      state.me.player.team = multi.myId();
       multi.join(q.room);
       multi.sync(this, state);
       this.multi = multi;
+      state.me.player.setTeam(multi.myId());
     } else {
       for (var i = 0; i < 3; i++) {
         state.others.push(new Computer(this, 'computer-' + i));

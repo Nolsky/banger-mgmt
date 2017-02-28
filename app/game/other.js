@@ -4,7 +4,7 @@ var Player = require('./player');
 
 function Other(game, id, x, y) {
   this.id = id;
-  var player = new Player(game, 'other');
+  var player = new Player(game, id);
   this.player = player;
   this.game = game;
   player.sprite.x = x;
@@ -13,10 +13,9 @@ function Other(game, id, x, y) {
 
 Other.prototype.setPlayerState = function setPlayerState(ps) {
   var sprite = this.player.sprite;
-  sprite.x = ps.x;
-  sprite.y = ps.y;
-  sprite.body.velocity.x = ps.vx;
-  sprite.body.velocity.y = ps.vy;
+  this.player.health = ps.health;
+  this.player.alive = ps.health > 0;
+  this.game.physics.arcade.moveToXY(sprite, ps.x, ps.y, null, 40);
 };
 
 Other.prototype.update = function update() {

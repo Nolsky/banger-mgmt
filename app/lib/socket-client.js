@@ -8,12 +8,13 @@ var _ = require('lodash'),
 var host = window.location.origin;
 if (host.indexOf('localhost') !== -1) host = config.socketUrl;
 var socket = io(host); // this socket client
-exports.uuid = socket.id;
+exports.uuid = function uuid() {
+  return socket.id;
+}
 
 
 var ready = new Promise(function(res) {
   socket.on('connect', function() {
-    exports.uuid = socket.id;
     clearListeners();
     console.log('Connected to server');
     res();

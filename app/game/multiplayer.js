@@ -12,7 +12,7 @@ exports.join = function join(lobbyId) {
 };
 
 exports.myId = function myId() {
-  return socket.uuid;
+  return socket.uuid();
 };
 
 exports.update = function update(data) {
@@ -32,9 +32,8 @@ exports.sync = function sync(game, state) {
   socket.clearListeners();
 
   var eventHandlers = {
-    'SHOOT': function(data) {
-      ProjectileStore.fire(data.x, data.y, {
-        x: data.tox, y: data.toy}, data.team);
+    'SHOOT': function(b) {
+      ProjectileStore.fire(b.x1, b.y1, b.x2, b.y2, b.team, b.time);
     }
   };
 
@@ -43,7 +42,7 @@ exports.sync = function sync(game, state) {
 
     // Update player states
     _.each(data.playerStates, function(ps, player) {
-      if (player === socket.uuid) return;
+      if (player === socket.uuid()) return;
       var actor = others[player];
 
       if (!actor) {
@@ -57,8 +56,8 @@ exports.sync = function sync(game, state) {
 
     // Remove disconnected players
     _.each(others, function(other, id) {
-      if (!data.playerStates[id]) {
-        other.player.sprite.kill();
+      if (!data.playerStates[id] || id === socket.uuid()) {
+        other.player.die();
         var i = state.others.indexOf(other);
         if (i === -1) return;
         state.others.splice(i, 1);
