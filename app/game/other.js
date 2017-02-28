@@ -15,7 +15,11 @@ Other.prototype.setPlayerState = function setPlayerState(ps) {
   var sprite = this.player.sprite;
   this.player.health = ps.health;
   this.player.alive = ps.health > 0;
-  this.game.physics.arcade.moveToXY(sprite, ps.x, ps.y, null, 40);
+  if (Math.abs((ps.x - sprite.x) + (ps.y - sprite.y)) < 5) {
+    sprite.reset(ps.x, ps.y); // stops movement
+  } else {
+    this.game.physics.arcade.moveToXY(sprite, ps.x, ps.y, null, 40);
+  }
 };
 
 Other.prototype.update = function update() {
