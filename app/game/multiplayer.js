@@ -67,7 +67,7 @@ exports.sync = function sync(game, state) {
 
     // Process events
     _.each(data.events, function(event) {
-      if (event.actorId === socket.uuid) return;
+      if (event.actorId === socket.uuid()) return;
       eventHandlers[event.type](event.data);
     });
 
