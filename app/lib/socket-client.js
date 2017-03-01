@@ -5,13 +5,16 @@ var _ = require('lodash'),
     Promise = require('bluebird'),
     io = require('socket.io-client'); // socket.io lib
 
-var socket = io(config.socketUrl); // this socket client
-exports.uuid = socket.id;
+var host = window.location.origin;
+if (host.indexOf('localhost') !== -1) host = config.socketUrl;
+var socket = io(host); // this socket client
+exports.uuid = function uuid() {
+  return socket.id;
+}
 
 
 var ready = new Promise(function(res) {
   socket.on('connect', function() {
-    exports.uuid = socket.id;
     clearListeners();
     console.log('Connected to server');
     res();

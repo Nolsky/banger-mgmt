@@ -67,6 +67,7 @@ module.exports = {
       multi.join(q.room);
       multi.sync(this, state);
       this.multi = multi;
+      state.me.player.setTeam(multi.myId());
     } else {
       for (var i = 0; i < 3; i++) {
         state.others.push(new Computer(this, 'computer-' + i));
@@ -75,11 +76,14 @@ module.exports = {
 
 
 
-    // Fits game in page
+    // Fit game in page
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.pageAlignVertically = true;
     // this.scale.setScreenSize( true );
+
+    // Stop pausing
+    this.stage.disableVisibilityChange = true;
   },
 
   update: function() {
