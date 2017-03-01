@@ -21,6 +21,7 @@ var cycle;
 function stopCycle() {
   console.log('Clearing game cycle');
   clearInterval(cycle);
+  cycle = null;
 }
 function digest() {
   ticks++;
@@ -33,6 +34,7 @@ function digest() {
       return;
     }
     io.to(gameId).emit('UPDATE', state);
+    state.events = []; // clear events
   });
 }
 function startCycle() {
@@ -45,7 +47,8 @@ function createGame(gameId, state) {
   if (games[gameId]) return;
   games[gameId] = _.extend({
     users: [],
-    playerStates: {}
+    playerStates: {},
+    events: []
   }, state);
   if (!cycle) startCycle();
 }
@@ -87,8 +90,11 @@ io.sockets.on('connection', function(client) {
       game.playerStates[client.id] || {}, data);
   });
 
-  client.on('event', function() {
-
+  client.on('event', function(payload) {
+    var game = games[client.game];
+    if (!game) return;
+    payload.actorId = client.id;
+    game.events.push(payload);
   });
 
   client.on('disconnect', function() {

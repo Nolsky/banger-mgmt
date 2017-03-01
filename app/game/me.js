@@ -45,17 +45,19 @@ Me.prototype.update = function update() {
 
   if (this.game.multi) {
     this.game.multi.update({
-      x: mysprite.x,
-      y: mysprite.y,
-      vx: mysprite.body.velocity.x,
-      vy: mysprite.body.velocity.y
+      health: this.player.health,
+      x: Math.floor(mysprite.x),
+      y: Math.floor(mysprite.y)
     });
   }
 
   this.player.updateAnimation();
 
   if (this.fireButton.isDown) {
-    this.player.shoot('pointer');
+    this.player.shoot(
+      this.game.input.activePointer.position.x,
+      this.game.input.activePointer.position.y
+    );
   }
 
 };

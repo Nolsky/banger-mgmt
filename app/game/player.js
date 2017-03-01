@@ -22,6 +22,11 @@ function Player(game, team) {
   this.sprite.body.collideWorldBounds = true;
   this.sprite.body.setSize(200, 150, 150, 350); // x, y, offsetx, offsety
 
+  this.nametag = game.add.text(this.sprite.x, this.sprite.y, this.team, {
+    fontSize: '14px',
+    fill: '#3333bb'
+  });
+
   this.sprite.animations.add(
     'idleDoge', [10,11,12,13,14,15,16,17,18,19], 5, true);
   this.sprite.play('idleDoge');
@@ -29,6 +34,11 @@ function Player(game, team) {
 
   this.sprite.animations.add('runDoge', [20,21,22,23,24,25,26,27], 8, true);
 }
+
+Player.prototype.setTeam = function setTeam(newTeam) {
+  this.team = newTeam;
+  if (this.nameTag) this.nameTag.setText(newTeam);
+};
 
 Player.prototype.damage = function damage() {
   this.health -= 1;
@@ -41,26 +51,33 @@ Player.prototype.damage = function damage() {
 
 Player.prototype.die = function damage() {
   this.alive = false;
+  this.nametag.kill();
   this.sprite.kill();
 };
 
-Player.prototype.shoot = function shoot(target) {
+Player.prototype.shoot = function shoot(x, y) {
   if (!this.alive) return;
   if (Date.now() - this.lastShot < this.FIRERATE) return;
   if (this.game.multi) {
-    this.game.multi.emit('I_SHOT', {
+    this.game.multi.emit('SHOOT', {
       team: this.team,
-      x: this.sprite.x,
-      y: this.sprite.y
+      time: Date.now(),
+      x1: this.sprite.x,
+      y1: this.sprite.y,
+      x2: x,
+      y2: y
     });
   }
   this.lastShot = Date.now();
-  ProjectileStore.fire(this.sprite.x, this.sprite.y, target, this.team);
+  ProjectileStore.fire(this.sprite.x, this.sprite.y, x, y, this.team);
 };
 
 Player.prototype.updateAnimation = function updateAnimation() {
   var vx = this.sprite.body.velocity.x;
   var vy = this.sprite.body.velocity.y;
+
+  this.nametag.x = this.sprite.x;
+  this.nametag.y = this.sprite.y + 50;
 
   this.sprite.scale.x = 0.2 * (vx < 0 ? -1 : 1);
 

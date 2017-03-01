@@ -58,8 +58,12 @@ Computer.prototype.update = function update(gameState) {
 
   this.player.updateAnimation();
 
+
   if (Date.now() - this.lastShot > Math.random() * 4000) {
-    this.player.shoot(gameState.me.player.sprite);
+    this.player.shoot(
+      gameState.me.player.sprite.x, gameState.me.player.sprite.y
+    );
+
     this.lastShot = Date.now();
 
   }

@@ -24,7 +24,7 @@ module.exports = {
   node: {
     process: true
   },
-  devtool: debug ? 'cheap-source-map' : null,
+  devtool: debug ? 'cheap-source-map' : false,
   entry: debug ? {
     app: [
       './app/public/stylesheet.css',
@@ -64,8 +64,10 @@ module.exports = {
       'lib'
     ],
     alias: {
+      'Phaser': phaser,
       'phaser': phaser,
       'pixi.js': pixi,
+      'PIXI.js': pixi,
       'p2': p2
     }
   },
@@ -82,7 +84,6 @@ module.exports = {
         $, 'NODE_ENV'
       ))
     }),
-    new webpack.optimize.UglifyJsPlugin({mangle: false}),
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.optimize.UglifyJsPlugin({mangle: false})
   ]
 };
