@@ -24,6 +24,11 @@ module.exports = {
       Phaser.Tilemap.TILED_JSON
     );
 
+    // joystick
+    this.load.image('blue_circle', 'assets/imgs/blue_circle.png');
+    // this.load.image('blue_dot', 'assets/imgs/blue_dot.png');
+    this.load.image('circle', 'assets/imgs/circle.png');
+    
     this.load.image('menuBanger', 'assets/imgs/mainMenu/banger.png');
     this.load.image('menuManagement', 'assets/imgs/mainMenu/management.png');
     this.load.image('menuPlay', 'assets/imgs/mainMenu/menuPlayButton.png');
