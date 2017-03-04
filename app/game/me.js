@@ -44,6 +44,7 @@ Me.prototype.update = function update() {
   }
 
   if (this.game.multi) {
+    this.player.team = this.game.multi.myId();
     this.game.multi.update({
       health: this.player.health,
       x: Math.floor(mysprite.x),

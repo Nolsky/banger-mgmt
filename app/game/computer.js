@@ -4,7 +4,7 @@ var Player = require('./player');
 
 function Computer(game, id) {
   this.id = id;
-  var player = new Player(game, 'comps');
+  var player = new Player(game, 'skynet');
   this.player = player;
   this.game = game;
   this.lastMove = 0;
