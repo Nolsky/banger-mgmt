@@ -12,7 +12,6 @@ function Me(game) {
   game.camera.follow(player.sprite);
 
   this.useJoysticks = !game.game.device.desktop;
-  this.useJoysticks = true;
 
   // Controls
   if (this.useJoysticks) {
