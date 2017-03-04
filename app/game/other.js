@@ -14,7 +14,10 @@ function Other(game, id, x, y) {
 Other.prototype.setPlayerState = function setPlayerState(ps) {
   var sprite = this.player.sprite;
   this.player.health = ps.health;
-  this.player.alive = ps.health > 0;
+  if (ps.health < 1) {
+    this.player.die();
+  };
+  if (!this.player.alive) return;
   if (Math.abs((ps.x - sprite.x) + (ps.y - sprite.y)) < 5) {
     sprite.reset(ps.x, ps.y); // stops movement
   } else {

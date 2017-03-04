@@ -69,6 +69,7 @@ module.exports = {
     var game = this;
     // Me
     state.me.update();
+
     this.physics.arcade.collide(state.me.player.sprite, state.collisionLayer);
     this.physics.arcade.overlap(
       ProjectileStore.get(),
